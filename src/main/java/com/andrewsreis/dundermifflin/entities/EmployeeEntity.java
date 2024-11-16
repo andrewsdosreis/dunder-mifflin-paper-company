@@ -18,11 +18,15 @@ public class EmployeeEntity {
     @Column(length = 50)
     private final String department;
 
+    @Column
+    private String photo;
+
     protected EmployeeEntity() {
         this.id = null;
         this.firstName = null;
         this.lastName = null;
         this.department = null;
+        this.photo = null;
     }
 
     private EmployeeEntity(Builder builder) {
@@ -30,6 +34,7 @@ public class EmployeeEntity {
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.department = builder.department;
+        this.photo = builder.photo;
     }
 
     // Getters
@@ -49,12 +54,17 @@ public class EmployeeEntity {
         return department;
     }
 
-    // Builder Class
+    public String getPhoto() {
+        return photo;
+    }
+
+    // Builder
     public static class Builder {
         private Long id;
         private String firstName;
         private String lastName;
         private String department;
+        private String photo;
 
         public Builder() {
         }
@@ -76,6 +86,11 @@ public class EmployeeEntity {
 
         public Builder department(String department) {
             this.department = department;
+            return this;
+        }
+
+        public Builder photo(String photo) {
+            this.photo = photo;
             return this;
         }
 
