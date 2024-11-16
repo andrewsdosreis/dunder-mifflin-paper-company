@@ -1,3 +1,13 @@
 spring:
-  profiles:
-    active: dev
+  application:
+    name: dunder-mifflin-app
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+logging:
+  level:
+    root: INFO

@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dundermifflin
+    username: user
+    password: password
+  jpa:
+    show-sql: true
+
+aws:
+  region: ${AWS_DEFAULT_REGION:eu-west-1}
+  s3:
+    bucket: dunder-mifflin-bucket
+    endpoint: http://localhost:4566
+  credentials:
+    access-key: ${AWS_ACCESS_KEY_ID:test}
+    secret-key: ${AWS_SECRET_ACCESS_KEY:test}
