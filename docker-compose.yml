@@ -1,0 +1,30 @@
+services:
+  localstack:
+    image: localstack/localstack-pro:latest
+    container_name: localstack-dev
+    environment:
+      - SERVICES=s3
+      - DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    volumes:
+      - ./localstack/volume:/var/lib/localstack
+      - ./localstack/setup.sh:/etc/localstack/init/ready.d/setup.sh
+  postgres:
+    image: postgres:15.3
+    container_name: postgres-dev
+    environment:
+      POSTGRES_DB: dundermifflin
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
+volumes:
+  pgdata:
