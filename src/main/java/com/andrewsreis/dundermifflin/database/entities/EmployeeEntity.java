@@ -1,4 +1,4 @@
-package com.andrewsreis.dundermifflin.entities;
+package com.andrewsreis.dundermifflin.database.entities;
 
 import jakarta.persistence.*;
 
