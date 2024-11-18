@@ -14,7 +14,7 @@ services:
       - "4571:4571"
     volumes:
       - ./localstack/volume:/var/lib/localstack
-      - ./localstack/lambda_function:/var/task
+      - ./localstack/trivia_api:/var/task
       - ./localstack/setup.sh:/etc/localstack/init/ready.d/setup.sh
       - /var/run/docker.sock:/var/run/docker.sock
   postgres:

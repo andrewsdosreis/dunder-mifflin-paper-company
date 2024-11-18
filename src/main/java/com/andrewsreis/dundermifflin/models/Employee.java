@@ -5,6 +5,7 @@ public record Employee(
         String firstName,
         String lastName,
         String department,
-        String photo
+        String photo,
+        String trivia
 ) {
 }

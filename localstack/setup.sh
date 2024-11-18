@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -x
 
 # Set environment variables for AWS CLI to interact with LocalStack
 export AWS_ACCESS_KEY_ID=test
@@ -6,58 +8,102 @@ export AWS_SECRET_ACCESS_KEY=test
 export AWS_DEFAULT_REGION=eu-west-1
 
 # Define variables
+STAGE_NAME="test"
+ROLE_ARN="arn:aws:iam::000000000000:role/lambda-role" # Dummy ARN for LocalStack
+ZIP_FILE="/var/task/trivia_api.zip"
 FUNCTION_NAME="TheOfficeTriviaFunction"
-ZIP_FILE="/var/task/lambda_function.zip"
-ROLE_ARN="arn:aws:iam::000000000000:role/lambda-role"  # Dummy ARN for LocalStack
+FUNCTION_ARN="arn:aws:lambda:${AWS_DEFAULT_REGION}:000000000000:function:${FUNCTION_NAME}" # Get the function ARN (LocalStack uses a static ARN format)
 API_NAME="TheOfficeTriviaAPI"
 RESOURCE_PATH="trivia"
-STAGE_NAME="test"
 
 # Create the S3 bucket
 aws s3 mb s3://dunder-mifflin-bucket --endpoint-url=http://localhost:4566
 
-# Create the Lambda function
+# Create or update the Lambda function
+aws lambda delete-function \
+    --function-name ${FUNCTION_NAME} \
+    --endpoint-url=http://localhost:4566 \
+    --region ${AWS_DEFAULT_REGION} || true
+
 aws lambda create-function \
     --function-name ${FUNCTION_NAME} \
     --runtime python3.8 \
-    --handler lambda_function.lambda_handler \
+    --handler trivia_api.lambda_handler \
     --zip-file fileb://${ZIP_FILE} \
     --role ${ROLE_ARN} \
-    --endpoint-url=http://localhost:4566
+    --endpoint-url=http://localhost:4566 \
+    --region ${AWS_DEFAULT_REGION}
 
-# Get the function ARN (LocalStack uses a static ARN format)
 FUNCTION_ARN="arn:aws:lambda:${AWS_DEFAULT_REGION}:000000000000:function:${FUNCTION_NAME}"
 
-# Create the API Gateway REST API
-API_ID=$(aws apigateway create-rest-api \
-    --name "${API_NAME}" \
-    --query 'id' \
+# Check if the API already exists
+API_ID=$(aws apigateway get-rest-apis \
+    --query "items[?name=='${API_NAME}'].id | [0]" \
     --output text \
-    --endpoint-url=http://localhost:4566)
+    --endpoint-url=http://localhost:4566 \
+    --region ${AWS_DEFAULT_REGION})
+
+if [ "$API_ID" == "None" ] || [ -z "$API_ID" ]; then
+    # Create the API Gateway REST API
+    API_ID=$(aws apigateway create-rest-api \
+        --name "${API_NAME}" \
+        --query 'id' \
+        --output text \
+        --endpoint-url=http://localhost:4566 \
+        --region ${AWS_DEFAULT_REGION})
+    echo "Created REST API with ID: $API_ID"
+else
+    echo "Using existing REST API with ID: $API_ID"
+fi
 
 # Get the root resource ID
 PARENT_ID=$(aws apigateway get-resources \
     --rest-api-id ${API_ID} \
     --query 'items[?path==`"/"`].id' \
     --output text \
-    --endpoint-url=http://localhost:4566)
+    --endpoint-url=http://localhost:4566 \
+    --region ${AWS_DEFAULT_REGION})
 
-# Create a new resource under the root resource
-RESOURCE_ID=$(aws apigateway create-resource \
+# Check if the resource already exists
+RESOURCE_ID=$(aws apigateway get-resources \
     --rest-api-id ${API_ID} \
-    --parent-id ${PARENT_ID} \
-    --path-part ${RESOURCE_PATH} \
-    --query 'id' \
+    --query "items[?pathPart=='${RESOURCE_PATH}'].id | [0]" \
     --output text \
-    --endpoint-url=http://localhost:4566)
+    --endpoint-url=http://localhost:4566 \
+    --region ${AWS_DEFAULT_REGION})
 
-# Create a GET method on the new resource
-aws apigateway put-method \
+if [ "$RESOURCE_ID" == "None" ] || [ -z "$RESOURCE_ID" ]; then
+    # Create a new resource under the root resource
+    RESOURCE_ID=$(aws apigateway create-resource \
+        --rest-api-id ${API_ID} \
+        --parent-id ${PARENT_ID} \
+        --path-part ${RESOURCE_PATH} \
+        --query 'id' \
+        --output text \
+        --endpoint-url=http://localhost:4566 \
+        --region ${AWS_DEFAULT_REGION})
+    echo "Created resource with ID: $RESOURCE_ID"
+else
+    echo "Using existing resource with ID: $RESOURCE_ID"
+fi
+
+# Create a GET method on the resource (if not exists)
+METHOD_EXISTS=$(aws apigateway get-method \
     --rest-api-id ${API_ID} \
     --resource-id ${RESOURCE_ID} \
     --http-method GET \
-    --authorization-type "NONE" \
-    --endpoint-url=http://localhost:4566
+    --endpoint-url=http://localhost:4566 \
+    --region ${AWS_DEFAULT_REGION} || echo "NotFound")
+
+if [ "$METHOD_EXISTS" == "NotFound" ]; then
+    aws apigateway put-method \
+        --rest-api-id ${API_ID} \
+        --resource-id ${RESOURCE_ID} \
+        --http-method GET \
+        --authorization-type "NONE" \
+        --endpoint-url=http://localhost:4566 \
+        --region ${AWS_DEFAULT_REGION}
+fi
 
 # Integrate the GET method with the Lambda function
 aws apigateway put-integration \
@@ -67,7 +113,8 @@ aws apigateway put-integration \
     --type AWS_PROXY \
     --integration-http-method POST \
     --uri "arn:aws:apigateway:${AWS_DEFAULT_REGION}:lambda:path/2015-03-31/functions/${FUNCTION_ARN}/invocations" \
-    --endpoint-url=http://localhost:4566
+    --endpoint-url=http://localhost:4566 \
+    --region ${AWS_DEFAULT_REGION}
 
 # Grant permission for API Gateway to invoke the Lambda function
 aws lambda add-permission \
@@ -76,13 +123,15 @@ aws lambda add-permission \
     --action lambda:InvokeFunction \
     --principal apigateway.amazonaws.com \
     --source-arn "arn:aws:execute-api:${AWS_DEFAULT_REGION}:000000000000:${API_ID}/*/GET/${RESOURCE_PATH}" \
-    --endpoint-url=http://localhost:4566
+    --endpoint-url=http://localhost:4566 \
+    --region ${AWS_DEFAULT_REGION} || true
 
 # Deploy the API
 aws apigateway create-deployment \
     --rest-api-id ${API_ID} \
     --stage-name ${STAGE_NAME} \
-    --endpoint-url=http://localhost:4566
+    --endpoint-url=http://localhost:4566 \
+    --region ${AWS_DEFAULT_REGION}
 
 # Output the API endpoint
 API_URL="http://localhost:4566/restapis/${API_ID}/${STAGE_NAME}/_user_request_/${RESOURCE_PATH}"

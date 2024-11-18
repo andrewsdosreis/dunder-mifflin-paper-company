@@ -7,13 +7,14 @@ import com.andrewsreis.dundermifflin.utils.ImageUtil;
 import java.awt.image.BufferedImage;
 
 public abstract class EmployeeMapper {
-    public static Employee toModel(EmployeeEntity entity) {
+    public static Employee toModel(EmployeeEntity entity, String trivia) {
         return new Employee(
                 entity.getId(),
                 entity.getFirstName(),
                 entity.getLastName(),
                 entity.getDepartment(),
-                entity.getPhoto()
+                entity.getPhoto(),
+                trivia
         );
     }
 

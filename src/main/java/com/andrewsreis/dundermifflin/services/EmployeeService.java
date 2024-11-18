@@ -15,17 +15,23 @@ import java.util.List;
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PhotoService photoService;
+    private final TriviaService triviaService;
 
-    public EmployeeService(EmployeeRepository employeeRepository, PhotoService photoService) {
+    public EmployeeService(EmployeeRepository employeeRepository, PhotoService photoService, TriviaService triviaService) {
         this.employeeRepository = employeeRepository;
         this.photoService = photoService;
+        this.triviaService = triviaService;
     }
 
     public Employee getEmployeeById(Long id) {
         var employee = employeeRepository
                 .findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
-        return EmployeeMapper.toModel(employee);
+
+        return EmployeeMapper.toModel(
+                employee,
+                getEmployeeTrivia(employee.getFirstName(), employee.getLastName())
+        );
     }
 
     public String getEmployeePhotoById(Long id) {
@@ -39,7 +45,12 @@ public class EmployeeService {
         return employeeRepository
                 .findAll()
                 .stream()
-                .map(EmployeeMapper::toModel)
+                .map(employeeEntity ->
+                        EmployeeMapper.toModel(
+                                employeeEntity,
+                                getEmployeeTrivia(employeeEntity.getFirstName(), employeeEntity.getLastName())
+                        )
+                )
                 .toList();
     }
 
@@ -52,9 +63,12 @@ public class EmployeeService {
                 .department(department)
                 .photo(key)
                 .build();
-
         createdEmployee = employeeRepository.save(createdEmployee);
-        return EmployeeMapper.toModel(createdEmployee);
+
+        return EmployeeMapper.toModel(
+                createdEmployee,
+                getEmployeeTrivia(createdEmployee.getFirstName(), createdEmployee.getLastName())
+        );
     }
 
     public void deleteEmployee(Long id) {
@@ -67,5 +81,9 @@ public class EmployeeService {
 
     private @NotNull String buildFileName(String firstName, String lastName) {
         return firstName + "-" + lastName;
+    }
+
+    private String getEmployeeTrivia(String firstName, String lastName) {
+        return triviaService.getTrivia(firstName + "_" + lastName);
     }
 }
