@@ -20,7 +20,7 @@ employees=(
     "Meredith Palmer Supplier_Relations local-meredith.png"
     "Michael Scott Manager local-michael.png"
     "Oscar Martinez Accounting local-oscar.png"
-    "Pam Beesley Receptionist local-pam.png"
+    "Pam Beesly Receptionist local-pam.png"
     "Phyllis Vance Sales local-phyllis.png"
     "Roy Anderson Warehouse local-roy.png"
     "Ryan Howard Temp local-ryan.png"
