@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/dundermifflin
-    username: user
-    password: password
+    url: jdbc:postgresql://localhost.localstack.cloud:4510/dundermifflin
+    username: test
+    password: test
   jpa:
     show-sql: true
 
@@ -16,10 +16,10 @@ aws:
     endpoint: http://localhost:4566
   elasticache:
     host: localhost.localstack.cloud
-    port: 4510
+    port: 4511
   sqs:
     endpoint: http://sqs.eu-west-1.localhost.localstack.cloud:4566
     queue: /000000000000/quotes
 
 trivia-api:
-  endpoint: http://localhost:4566/restapis/wvqqif60hl/test/_user_request_/trivia
+  endpoint: http://localhost:4566/restapis/j9n3xmavvf/test/_user_request_/trivia
