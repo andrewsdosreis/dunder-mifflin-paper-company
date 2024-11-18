@@ -1,10 +1,13 @@
 package com.andrewsreis.dundermifflin.mappers;
 
-import com.andrewsreis.dundermifflin.entities.EmployeeEntity;
+import com.andrewsreis.dundermifflin.cache.entities.Quote;
+import com.andrewsreis.dundermifflin.database.entities.EmployeeEntity;
 import com.andrewsreis.dundermifflin.models.Employee;
+import com.andrewsreis.dundermifflin.models.EmployeeQuotes;
 import com.andrewsreis.dundermifflin.utils.ImageUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 public abstract class EmployeeMapper {
     public static Employee toModel(EmployeeEntity entity, String trivia) {
@@ -22,12 +25,7 @@ public abstract class EmployeeMapper {
         return ImageUtil.beautify(photo);
     }
 
-    public static EmployeeEntity toEntity(Employee model) {
-        return new EmployeeEntity.Builder()
-                .id(model.id())
-                .firstName(model.firstName())
-                .lastName(model.lastName())
-                .department(model.department())
-                .build();
+    public static EmployeeQuotes toEmployeeQuotes(List<Quote> quotes, String name, String lastName) {
+        return new EmployeeQuotes(name, lastName, quotes.stream().map(Quote::getQuote).toList());
     }
 }

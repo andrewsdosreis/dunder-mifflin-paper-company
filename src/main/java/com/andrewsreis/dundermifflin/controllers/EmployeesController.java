@@ -1,6 +1,7 @@
 package com.andrewsreis.dundermifflin.controllers;
 
 import com.andrewsreis.dundermifflin.models.Employee;
+import com.andrewsreis.dundermifflin.models.EmployeeQuotes;
 import com.andrewsreis.dundermifflin.services.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,12 @@ public class EmployeesController {
     public ResponseEntity<String> renderEmployeePhoto(@PathVariable Long id) {
         LOGGER.info("Rendering photo for employee with id: {}", id);
         return ResponseEntity.ok(employeeService.getEmployeePhotoById(id));
+    }
+
+    @GetMapping(value = "/{id}/quotes")
+    public ResponseEntity<EmployeeQuotes> getEmployeeQuotes(@PathVariable Long id) {
+        LOGGER.info("Fetching quotes for employee with id: {}", id);
+        return ResponseEntity.ok(employeeService.getEmployeeQuotes(id));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

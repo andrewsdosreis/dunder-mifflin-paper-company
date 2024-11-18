@@ -42,7 +42,7 @@ public class TriviaService {
             return rootNode.path("trivia").asText();
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND || e.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
-                return "";  // fallback to empty trivia
+                return "There is no Trivia for this character";  // fallback to empty trivia
             }
             throw e;  // rethrow if not a 404 or 500 status
         } catch (IOException e) {

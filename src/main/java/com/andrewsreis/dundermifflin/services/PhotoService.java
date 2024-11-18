@@ -22,12 +22,11 @@ public class PhotoService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PhotoService.class);
 
     private final S3Client s3Client;
-
-    @Value("${aws.s3.bucket}")
     private String bucket;
 
-    public PhotoService(S3Client s3Client) {
+    public PhotoService(S3Client s3Client, String s3Bucket) {
         this.s3Client = s3Client;
+        this.bucket = s3Bucket;
     }
 
     public String uploadEmployeePhoto(MultipartFile photo, String fileName) {
