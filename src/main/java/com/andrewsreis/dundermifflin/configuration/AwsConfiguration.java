@@ -1,38 +1,60 @@
 package com.andrewsreis.dundermifflin.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.sqs.SqsClient;
 
 import java.net.URI;
 
-@Configuration
+@Configuration(value = "aws")
 public class AwsConfiguration {
 
-    @Value("${aws.region}")
-    private String awsRegion;
+    private final AwsProperties awsProperties;
 
-    @Value("${aws.s3.endpoint}")
-    private String s3Endpoint;
-
-    @Value("${aws.credentials.access-key}")
-    private String accessKey;
-
-    @Value("${aws.credentials.secret-key}")
-    private String secretKey;
+    public AwsConfiguration(AwsProperties awsProperties) {
+        this.awsProperties = awsProperties;
+    }
 
     @Bean
     public S3Client s3Client() {
-        AwsBasicCredentials awsBasicCredentials = AwsBasicCredentials.create(accessKey, secretKey);
         return S3Client.builder()
-                .endpointOverride(URI.create(s3Endpoint))
-                .region(Region.of(awsRegion))
-                .credentialsProvider(StaticCredentialsProvider.create(awsBasicCredentials))
+                .endpointOverride(URI.create(awsProperties.getS3().getEndpoint()))
+                .region(Region.of(awsProperties.getRegion()))
+                .credentialsProvider(StaticCredentialsProvider.create(createAwsBasicCredentials()))
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true)
+                        .build())
                 .build();
     }
 
+    @Bean
+    public String s3Bucket() {
+        return awsProperties.getS3().getBucket();
+    }
+
+    @Bean
+    public SqsClient sqsClient() {
+        return SqsClient.builder()
+                .region(Region.of(awsProperties.getRegion()))
+                .credentialsProvider(StaticCredentialsProvider.create(createAwsBasicCredentials()))
+                .endpointOverride(URI.create(awsProperties.getSqs().getEndpoint()))
+                .build();
+    }
+
+    @Bean
+    public String sqsQueueUrl() {
+        return awsProperties.getSqs().getEndpoint().concat(awsProperties.getSqs().getQueue());
+    }
+
+    private AwsBasicCredentials createAwsBasicCredentials() {
+        return AwsBasicCredentials.create(
+                awsProperties.getCredentials().getAccessKey(),
+                awsProperties.getCredentials().getSecretKey()
+        );
+    }
 }

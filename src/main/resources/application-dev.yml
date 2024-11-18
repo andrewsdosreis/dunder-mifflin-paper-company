@@ -8,12 +8,18 @@ spring:
 
 aws:
   region: ${AWS_DEFAULT_REGION:eu-west-1}
-  s3:
-    bucket: dunder-mifflin-bucket
-    endpoint: http://localhost:4566
   credentials:
     access-key: ${AWS_ACCESS_KEY_ID:test}
     secret-key: ${AWS_SECRET_ACCESS_KEY:test}
+  s3:
+    bucket: dunder-mifflin-bucket
+    endpoint: http://localhost:4566
+  elasticache:
+    host: localhost.localstack.cloud
+    port: 4510
+  sqs:
+    endpoint: http://sqs.eu-west-1.localhost.localstack.cloud:4566
+    queue: /000000000000/quotes
 
 trivia-api:
-  endpoint: http://localhost:4566/restapis/nrfk0cavsr/test/_user_request_/trivia
+  endpoint: http://localhost:4566/restapis/wvqqif60hl/test/_user_request_/trivia
