@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: ${aws.rds.url}
+    username: ${aws.rds.username}
+    password: ${aws.rds.password}
+
+aws:
+  region: eu-west-1
+  api-gateway:
+    endpoint: http://localhost:4566/restapis/j9n3xmavvf/test/_user_request_/trivia
+  credentials:
+    access-key-id: test
+    secret-access-key: test
+  elasticache:
+    host: localhost
+    port: 6379
+  rds:
+    url: jdbc:postgresql://localhost:5432/dundermifflin
+    username: test
+    password: test
+  s3:
+    bucket: dunder-mifflin-bucket
+    endpoint: http://localhost:4566
+  sqs:
+    endpoint: http://sqs.eu-west-1.localhost.localstack.cloud:4566
+    queue: /000000000000/quotes
