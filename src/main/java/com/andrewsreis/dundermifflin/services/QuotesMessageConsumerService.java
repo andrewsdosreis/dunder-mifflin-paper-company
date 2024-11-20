@@ -16,15 +16,15 @@ import software.amazon.awssdk.services.sqs.model.ReceiveMessageResponse;
 import java.util.List;
 
 @Service
-public class SqsMessageConsumerService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SqsMessageConsumerService.class);
+public class QuotesMessageConsumerService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(QuotesMessageConsumerService.class);
 
     private final SqsClient sqsClient;
     private final String sqsQueueUrl;
     private final QuoteService quoteService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public SqsMessageConsumerService(SqsClient sqsClient, String sqsQueueUrl, QuoteService quoteService) {
+    public QuotesMessageConsumerService(SqsClient sqsClient, String sqsQueueUrl, QuoteService quoteService) {
         this.sqsClient = sqsClient;
         this.sqsQueueUrl = sqsQueueUrl;
         this.quoteService = quoteService;

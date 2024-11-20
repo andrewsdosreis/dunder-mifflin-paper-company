@@ -1,25 +1,28 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost.localstack.cloud:4510/dundermifflin
-    username: test
-    password: test
+    url: ${aws.rds.url}
+    username: ${aws.rds.username}
+    password: ${aws.rds.password}
   jpa:
     show-sql: true
 
 aws:
   region: ${AWS_DEFAULT_REGION:eu-west-1}
+  api-gateway:
+    endpoint: http://localhost:4566/restapis/ukrun0cuoi/test/_user_request_/trivia
   credentials:
-    access-key: ${AWS_ACCESS_KEY_ID:test}
-    secret-key: ${AWS_SECRET_ACCESS_KEY:test}
-  s3:
-    bucket: dunder-mifflin-bucket
-    endpoint: http://localhost:4566
+    access-key-id: ${AWS_ACCESS_KEY_ID:test}
+    secret-access-key: ${AWS_SECRET_ACCESS_KEY:test}
   elasticache:
     host: localhost.localstack.cloud
     port: 4511
+  rds:
+    url: jdbc:postgresql://localhost.localstack.cloud:4510/dundermifflin
+    username: test
+    password: test
+  s3:
+    bucket: dunder-mifflin-bucket
+    endpoint: http://localhost:4566
   sqs:
     endpoint: http://sqs.eu-west-1.localhost.localstack.cloud:4566
     queue: /000000000000/quotes
-
-trivia-api:
-  endpoint: http://localhost:4566/restapis/j9n3xmavvf/test/_user_request_/trivia

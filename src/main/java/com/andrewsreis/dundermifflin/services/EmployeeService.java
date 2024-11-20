@@ -97,11 +97,11 @@ public class EmployeeService {
         );
     }
 
-    private @NotNull String buildFileName(String firstName, String lastName) {
+    private String buildFileName(String firstName, String lastName) {
         return firstName + "-" + lastName;
     }
 
-    private String getEmployeeTrivia(String firstName, String lastName) {
+    private @NotNull String getEmployeeTrivia(String firstName, String lastName) {
         return triviaService.getTrivia(firstName + "_" + lastName);
     }
 }

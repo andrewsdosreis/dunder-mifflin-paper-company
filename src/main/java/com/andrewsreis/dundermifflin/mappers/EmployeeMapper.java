@@ -25,6 +25,10 @@ public abstract class EmployeeMapper {
         return ImageUtil.beautify(photo);
     }
 
+    public static String toEmployeeQuote(String quote, String name, String lastName, BufferedImage photo) {
+        return ImageUtil.beautify(photo) + "\n\"" + quote + "\"\n - " + lastName + ", " + name + "\n";
+    }
+
     public static EmployeeQuotes toEmployeeQuotes(List<Quote> quotes, String name, String lastName) {
         return new EmployeeQuotes(name, lastName, quotes.stream().map(Quote::getQuote).toList());
     }
