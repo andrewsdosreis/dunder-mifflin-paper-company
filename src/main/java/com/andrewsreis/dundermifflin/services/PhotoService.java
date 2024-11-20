@@ -21,7 +21,7 @@ public class PhotoService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PhotoService.class);
 
     private final S3Client s3Client;
-    private String bucket;
+    private final String bucket;
 
     public PhotoService(S3Client s3Client, String s3Bucket) {
         this.s3Client = s3Client;

@@ -5,7 +5,7 @@ public class EmployeeNotFoundException extends RuntimeException {
     private static final String MESSAGE_NAME = "Employee not found with name: ";
 
     public EmployeeNotFoundException(Long id) {
-        super(MESSAGE_NAME.concat(id.toString()));
+        super(MESSAGE_ID.concat(id.toString()));
     }
 
     public EmployeeNotFoundException(String firstName, String lastName) {
