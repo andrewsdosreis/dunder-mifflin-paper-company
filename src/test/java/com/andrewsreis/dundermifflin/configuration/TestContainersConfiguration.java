@@ -48,8 +48,8 @@ public class TestContainersConfiguration {
         return new PostgreSQLContainer<>(DockerImageName.parse("postgres:15.3"))
                 .withExposedPorts(5432)
                 .withDatabaseName("dundermifflin")
-                .withUsername("test")
-                .withPassword("test")
+                .withUsername(awsProperties.getRds().getUsername())
+                .withPassword(awsProperties.getRds().getPassword())
                 .waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30)))
                 .withInitScript("test-db-init.sql")
                 .withCreateContainerCmdModifier(
@@ -60,7 +60,7 @@ public class TestContainersConfiguration {
     @Bean(initMethod = "start", destroyMethod = "stop")
     public GenericContainer<?> redisContainer() {
         return new GenericContainer<>(DockerImageName.parse("redis:latest"))
-                .withExposedPorts(6379)
+                .withExposedPorts(awsProperties.getElasticache().getPort())
                 .waitingFor(Wait.forListeningPort())
                 .withCreateContainerCmdModifier(
                         createContainerCmd -> createContainerCmd.withName("redis-testcontainers")
@@ -75,6 +75,7 @@ public class TestContainersConfiguration {
                 .withEnv("AWS_DEFAULT_REGION", "eu-west-1")
                 .withEnv("AWS_ACCESS_KEY_ID", "test")
                 .withEnv("AWS_SECRET_ACCESS_KEY", "test")
+                .withEnv("FORCE_CLEANUP", "1")
                 .withExposedPorts(4566)
                 .withCreateContainerCmdModifier(
                         createContainerCmd -> createContainerCmd.withName("localstack-testcontainers")
@@ -209,13 +210,11 @@ public class TestContainersConfiguration {
 
         // Add delay to ensure readiness
         try {
-            Thread.sleep(15000);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             LOGGER.warn("Thread sleep interrupted.");
         }
-
-        String teste = "";
     }
 
     public String getTriviaApiEndpoint() {

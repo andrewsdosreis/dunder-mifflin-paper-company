@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import({TestContainersConfiguration.class, AwsConfiguration.class, DatabaseConfiguration.class, CacheConfiguration.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmployeesControllerIT {
-    private final String EMPLOYEE_URI = "/employees";
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -31,6 +30,7 @@ public class EmployeesControllerIT {
     void shouldCreateAndRetrieveEmployee() {
         // Create Employee
         HttpEntity<?> requestEntity = createEmployeeRequestEntity();
+        String EMPLOYEE_URI = "/employees";
 
         ResponseEntity<Employee> responseEntity = restTemplate.postForEntity(EMPLOYEE_URI, requestEntity, Employee.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);

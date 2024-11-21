@@ -52,8 +52,8 @@ public class AwsConfiguration {
     }
 
     @Bean
-    public String sqsQueueUrl() {
-        return awsProperties.getSqs().getEndpoint().concat(awsProperties.getSqs().getQueue());
+    public String sqsQueueUrl(LocalStackContainer localStackContainer) {
+        return "http://localhost.localstack.cloud:4566/000000000000/quotes" ;
     }
 
     @Bean
