@@ -15,8 +15,8 @@ import software.amazon.awssdk.services.sqs.model.ReceiveMessageResponse;
 
 @Component
 @Profile("dev")
-public class QuotesMessageConsumer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(QuotesMessageConsumer.class);
+public class QuotesSqsMessageConsumer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(QuotesSqsMessageConsumer.class);
 
     private final SqsClient sqsClient;
     private final String sqsQueueUrl;
@@ -24,7 +24,7 @@ public class QuotesMessageConsumer {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public QuotesMessageConsumer(SqsClient sqsClient, String sqsQueueUrl, CreateQuoteUseCase createQuoteUseCase) {
+    public QuotesSqsMessageConsumer(SqsClient sqsClient, String sqsQueueUrl, CreateQuoteUseCase createQuoteUseCase) {
         this.sqsClient = sqsClient;
         this.sqsQueueUrl = sqsQueueUrl;
         this.createQuoteUseCase = createQuoteUseCase;

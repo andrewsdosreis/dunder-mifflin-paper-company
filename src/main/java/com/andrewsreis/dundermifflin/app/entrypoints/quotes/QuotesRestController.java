@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/quotes")
-public class QuotesController {
+public class QuotesRestController {
     private final GetRandomQuoteUseCase getRandomQuoteUseCase;
 
-    public QuotesController(GetRandomQuoteUseCase getRandomQuoteUseCase) {
+    public QuotesRestController(GetRandomQuoteUseCase getRandomQuoteUseCase) {
         this.getRandomQuoteUseCase = getRandomQuoteUseCase;
     }
 

@@ -1,4 +1,4 @@
-package com.andrewsreis.dundermifflin.configuration;
+package com.andrewsreis.dundermifflin.app.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

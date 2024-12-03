@@ -19,15 +19,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
-public class EmployeesController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeesController.class);
+public class EmployeesRestController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeesRestController.class);
 
     private final CreateEmployeeUseCase createEmployeeUseCase;
     private final FindEmployeeUseCase findEmployeeUseCase;
     private final DeleteEmployeeUseCase deleteEmployeeUseCase;
     private final RenderEmployeePhotoUseCase renderEmployeePhotoUseCase;
 
-    public EmployeesController(CreateEmployeeUseCase createEmployeeUseCase, FindEmployeeUseCase findEmployeeUseCase, DeleteEmployeeUseCase deleteEmployeeUseCase, RenderEmployeePhotoUseCase renderEmployeePhotoUseCase) {
+    public EmployeesRestController(CreateEmployeeUseCase createEmployeeUseCase, FindEmployeeUseCase findEmployeeUseCase, DeleteEmployeeUseCase deleteEmployeeUseCase, RenderEmployeePhotoUseCase renderEmployeePhotoUseCase) {
         this.createEmployeeUseCase = createEmployeeUseCase;
         this.findEmployeeUseCase = findEmployeeUseCase;
         this.deleteEmployeeUseCase = deleteEmployeeUseCase;

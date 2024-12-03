@@ -1,10 +1,10 @@
-package com.andrewsreis.dundermifflin.controller;
+package com.andrewsreis.dundermifflin.app.controller;
 
 import com.andrewsreis.dundermifflin.app.entrypoints.employees.models.EmployeeResponse;
-import com.andrewsreis.dundermifflin.configuration.AwsConfiguration;
-import com.andrewsreis.dundermifflin.configuration.CacheConfiguration;
-import com.andrewsreis.dundermifflin.configuration.DatabaseConfiguration;
-import com.andrewsreis.dundermifflin.configuration.TestContainersConfiguration;
+import com.andrewsreis.dundermifflin.app.configuration.AwsConfiguration;
+import com.andrewsreis.dundermifflin.app.configuration.CacheConfiguration;
+import com.andrewsreis.dundermifflin.app.configuration.DatabaseConfiguration;
+import com.andrewsreis.dundermifflin.app.configuration.TestContainersConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @Import({TestContainersConfiguration.class, AwsConfiguration.class, DatabaseConfiguration.class, CacheConfiguration.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class EmployeesControllerIT {
+public class EmployeesRestControllerIT {
 
     @Autowired
     private TestRestTemplate restTemplate;
