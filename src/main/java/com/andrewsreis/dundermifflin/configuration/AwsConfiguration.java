@@ -15,7 +15,6 @@ import java.net.URI;
 @Configuration(value = "aws")
 @Profile({"dev"})
 public class AwsConfiguration {
-
     private final AwsProperties awsProperties;
     private final AwsBasicCredentials credentials;
 
