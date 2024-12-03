@@ -1,10 +1,10 @@
 package com.andrewsreis.dundermifflin.controller;
 
+import com.andrewsreis.dundermifflin.app.entrypoints.employees.models.EmployeeResponse;
 import com.andrewsreis.dundermifflin.configuration.AwsConfiguration;
 import com.andrewsreis.dundermifflin.configuration.CacheConfiguration;
 import com.andrewsreis.dundermifflin.configuration.DatabaseConfiguration;
 import com.andrewsreis.dundermifflin.configuration.TestContainersConfiguration;
-import com.andrewsreis.dundermifflin.models.Employee;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,15 +32,15 @@ public class EmployeesControllerIT {
         HttpEntity<?> requestEntity = createEmployeeRequestEntity();
         String EMPLOYEE_URI = "/employees";
 
-        ResponseEntity<Employee> responseEntity = restTemplate.postForEntity(EMPLOYEE_URI, requestEntity, Employee.class);
+        ResponseEntity<EmployeeResponse> responseEntity = restTemplate.postForEntity(EMPLOYEE_URI, requestEntity, EmployeeResponse.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        Employee createdEmployee = responseEntity.getBody();
+        EmployeeResponse createdEmployee = responseEntity.getBody();
         assertThat(createdEmployee).isNotNull();
         assertThat(createdEmployee.firstName()).isEqualTo("Michael");
 
         // Retrieve Employee
-        ResponseEntity<Employee> getResponse = restTemplate.getForEntity(EMPLOYEE_URI + "/" + createdEmployee.id(), Employee.class);
+        ResponseEntity<EmployeeResponse> getResponse = restTemplate.getForEntity(EMPLOYEE_URI + "/" + createdEmployee.id(), EmployeeResponse.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(getResponse.getBody()).isNotNull();
         assertThat(getResponse.getBody().firstName()).isEqualTo("Michael");

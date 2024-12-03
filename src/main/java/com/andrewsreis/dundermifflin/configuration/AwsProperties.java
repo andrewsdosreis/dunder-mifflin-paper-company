@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @ConfigurationProperties(prefix = "aws")
 @Profile({"dev", "test"})
-class AwsProperties {
+public class AwsProperties {
     private String region;
     private ApiGateway apiGateway;
     private Credentials credentials;
