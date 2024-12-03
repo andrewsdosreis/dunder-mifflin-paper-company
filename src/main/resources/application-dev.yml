@@ -9,7 +9,7 @@ spring:
 aws:
   region: ${AWS_DEFAULT_REGION:eu-west-1}
   api-gateway:
-    endpoint: http://localhost:4566/restapis/ukrun0cuoi/test/_user_request_/trivia
+    endpoint: http://localhost:4566/restapis/vsixghv4fa/test/_user_request_/trivia
   credentials:
     access-key-id: ${AWS_ACCESS_KEY_ID:test}
     secret-access-key: ${AWS_SECRET_ACCESS_KEY:test}

@@ -5,6 +5,3 @@ CREATE TABLE employees (
     department VARCHAR(50),
     photo VARCHAR(255)
 );
-
--- INSERT INTO employees (first_name, last_name, department) VALUES ('Dwight', 'Schrute', 'Sales');
--- INSERT INTO employees (first_name, last_name, department) VALUES ('Jim', 'Halpert', 'Sales');

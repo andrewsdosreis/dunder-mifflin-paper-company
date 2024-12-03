@@ -11,5 +11,4 @@ public class DunderMifflinApplication {
     public static void main(String[] args) {
         SpringApplication.run(DunderMifflinApplication.class, args);
     }
-
 }
