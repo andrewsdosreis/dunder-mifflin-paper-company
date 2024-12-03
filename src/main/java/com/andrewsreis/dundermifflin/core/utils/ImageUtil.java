@@ -1,13 +1,13 @@
-package com.andrewsreis.dundermifflin.utils;
+package com.andrewsreis.dundermifflin.core.utils;
 
 import java.awt.image.BufferedImage;
 
-public abstract class ImageUtil {
+public class ImageUtil {
 
     public static String beautify(BufferedImage photo) {
         try {
             // Resize image for better terminal fit
-            int newWidth = 60; // Adjust for your terminal size
+            int newWidth = 80; // Adjust for your terminal size
             int newHeight = (photo.getHeight() * newWidth) / photo.getWidth();
 
             BufferedImage resizedImage = resizeImage(photo, newWidth, newHeight);
@@ -39,7 +39,8 @@ public abstract class ImageUtil {
                 // ANSI escape code for 24-bit color
                 builder.append(String.format("\u001B[48;2;%d;%d;%dm ", red, green, blue));
             }
-            builder.append("\u001B[0m\n"); // Reset color at the end of the line
+            // Reset color at the end of the line
+            builder.append("\u001B[0m\n");
         }
 
         return builder.toString();
