@@ -1,15 +1,12 @@
-package com.andrewsreis.dundermifflin.cache.entities;
+package com.andrewsreis.dundermifflin.app.dataproviders.quote;
 
 import java.io.Serializable;
 
-public class Quote implements Serializable {
+public class QuoteEntity implements Serializable {
     private String name;
     private String quote;
 
-    public Quote() {
-    }
-
-    public Quote(String name, String quote) {
+    public QuoteEntity(String name, String quote) {
         this.name = name;
         this.quote = quote;
     }

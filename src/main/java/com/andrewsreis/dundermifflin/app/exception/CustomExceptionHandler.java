@@ -1,4 +1,4 @@
-package com.andrewsreis.dundermifflin.exception;
+package com.andrewsreis.dundermifflin.app.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

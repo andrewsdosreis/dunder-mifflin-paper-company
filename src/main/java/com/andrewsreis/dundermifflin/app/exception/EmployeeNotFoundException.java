@@ -1,4 +1,4 @@
-package com.andrewsreis.dundermifflin.exception;
+package com.andrewsreis.dundermifflin.app.exception;
 
 public class EmployeeNotFoundException extends RuntimeException {
     private static final String MESSAGE_ID = "Employee not found with id: ";

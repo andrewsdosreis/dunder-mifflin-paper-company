@@ -1,35 +1,33 @@
+package com.andrewsreis.dundermifflin.app.entrypoints.quotes;
 
-package com.andrewsreis.dundermifflin.services;
-
-import com.andrewsreis.dundermifflin.cache.entities.Quote;
+import com.andrewsreis.dundermifflin.core.usecases.CreateQuoteUseCase;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.Message;
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest;
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageResponse;
 
-import java.util.List;
-
-@Service
+@Component
 @Profile("dev")
-public class QuotesMessageConsumerService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(QuotesMessageConsumerService.class);
+public class QuotesMessageConsumer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(QuotesMessageConsumer.class);
 
     private final SqsClient sqsClient;
     private final String sqsQueueUrl;
-    private final QuoteService quoteService;
+    private final CreateQuoteUseCase createQuoteUseCase;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public QuotesMessageConsumerService(SqsClient sqsClient, String sqsQueueUrl, QuoteService quoteService) {
+    public QuotesMessageConsumer(SqsClient sqsClient, String sqsQueueUrl, CreateQuoteUseCase createQuoteUseCase) {
         this.sqsClient = sqsClient;
         this.sqsQueueUrl = sqsQueueUrl;
-        this.quoteService = quoteService;
+        this.createQuoteUseCase = createQuoteUseCase;
     }
 
     @Scheduled(fixedDelay = 1000)
@@ -41,12 +39,11 @@ public class QuotesMessageConsumerService {
                 .build();
 
         ReceiveMessageResponse response = sqsClient.receiveMessage(receiveMessageRequest);
-        List<Message> messages = response.messages();
-
-        for (Message message : messages) {
-            processMessage(message);
-            deleteMessage(message);
-        }
+        response.messages()
+                .forEach(message -> {
+                    processMessage(message);
+                    deleteMessage(message);
+                });
     }
 
     private void processMessage(Message message) {
@@ -55,7 +52,7 @@ public class QuotesMessageConsumerService {
             JsonNode jsonNode = objectMapper.readTree(message.body());
             String name = jsonNode.get("name").asText();
             String quote = jsonNode.get("quote").asText();
-            quoteService.saveQuote(new Quote(name, quote));
+            createQuoteUseCase.create(name, quote);
         } catch (Exception e) {
             LOGGER.error("Error processing message: {}", message.body(), e);
         }

@@ -1,4 +1,4 @@
-package com.andrewsreis.dundermifflin.database.entities;
+package com.andrewsreis.dundermifflin.app.dataproviders.employee;
 
 import jakarta.persistence.*;
 
