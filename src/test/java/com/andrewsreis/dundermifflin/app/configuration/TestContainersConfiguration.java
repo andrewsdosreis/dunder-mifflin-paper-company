@@ -51,7 +51,7 @@ public class TestContainersConfiguration {
                 .withUsername(awsProperties.getRds().getUsername())
                 .withPassword(awsProperties.getRds().getPassword())
                 .waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30)))
-                .withInitScript("test-db-init.sql")
+                .withInitScript("static/test-db-init.sql")
                 .withCreateContainerCmdModifier(
                         createContainerCmd -> createContainerCmd.withName("postgres-testcontainers")
                 );
@@ -136,11 +136,11 @@ public class TestContainersConfiguration {
         String roleArn = "arn:aws:iam::000000000000:role/lambda-role";
 
         createLambdaFunction(lambdaClient, functionName, roleArn);
-        createApiGateway(apiGatewayClient, lambdaClient, functionName);
+        createApiGateway(apiGatewayClient, functionName);
     }
 
     private void createLambdaFunction(LambdaClient lambdaClient, String functionName, String roleArn) throws IOException {
-        InputStream lambdaZipStream = getClass().getClassLoader().getResourceAsStream("trivia_api.zip");
+        InputStream lambdaZipStream = getClass().getClassLoader().getResourceAsStream("static/trivia_api.zip");
         if (lambdaZipStream == null) {
             throw new IOException("Could not find trivia_api.zip in resources");
         }
@@ -158,7 +158,7 @@ public class TestContainersConfiguration {
         LOGGER.info("Lambda function '{}' created.", functionName);
     }
 
-    private void createApiGateway(ApiGatewayClient apiGatewayClient, LambdaClient lambdaClient, String functionName) {
+    private void createApiGateway(ApiGatewayClient apiGatewayClient, String functionName) {
         String apiName = "TheOfficeTriviaAPI";
         String resourcePath = "trivia";
         String stageName = "test";
@@ -166,6 +166,7 @@ public class TestContainersConfiguration {
         String accountId = "000000000000";
 
         CreateRestApiResponse apiResponse = apiGatewayClient.createRestApi(CreateRestApiRequest.builder().name(apiName).build());
+
         String apiId = apiResponse.id();
 
         String parentId = apiGatewayClient.getResources(GetResourcesRequest.builder().restApiId(apiId).build())
@@ -191,6 +192,7 @@ public class TestContainersConfiguration {
                 .build());
 
         String functionArn = "arn:aws:lambda:" + region + ":" + accountId + ":function:" + functionName;
+
         apiGatewayClient.putIntegration(PutIntegrationRequest.builder()
                 .restApiId(apiId)
                 .resourceId(resourceId)
@@ -207,14 +209,6 @@ public class TestContainersConfiguration {
 
         triviaEndpoint = "http://localhost:4566/restapis/" + apiId + "/" + stageName + "/_user_request_/" + resourcePath;
         LOGGER.info("API Gateway deployed at: {}", triviaEndpoint);
-
-        // Add delay to ensure readiness
-        try {
-            Thread.sleep(20000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            LOGGER.warn("Thread sleep interrupted.");
-        }
     }
 
     public String getTriviaApiEndpoint() {

@@ -121,6 +121,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Spring Boot Test (Test Scope) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- JUnit Jupiter (Test Scope) -->
         <dependency>
             <groupId>org.testcontainers</groupId>
@@ -128,11 +135,33 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Spring Boot Test (Test Scope) -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>1.9.2</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Cucumber (Test Scope) -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>7.18.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>7.18.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>7.18.1</version>
         </dependency>
     </dependencies>
     <build>
