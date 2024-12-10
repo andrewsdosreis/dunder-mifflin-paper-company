@@ -6,6 +6,9 @@ public class QuoteEntity implements Serializable {
     private String name;
     private String quote;
 
+    public QuoteEntity() {
+    }
+
     public QuoteEntity(String name, String quote) {
         this.name = name;
         this.quote = quote;
