@@ -13,7 +13,6 @@ import software.amazon.awssdk.services.sqs.SqsClient;
 import java.net.URI;
 
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
-import static org.testcontainers.containers.localstack.LocalStackContainer.Service.SQS;
 
 @TestConfiguration
 public class AwsConfiguration {
@@ -59,7 +58,7 @@ public class AwsConfiguration {
 
     @Bean
     public String sqsQueueUrl() {
-        return "https://localhost.localstack.cloud:4566/000000000000/quotes" ;
+        return "https://localhost.localstack.cloud:4566/000000000000/quotes";
     }
 
     @Bean
