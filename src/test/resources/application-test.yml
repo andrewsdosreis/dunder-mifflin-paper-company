@@ -22,5 +22,5 @@ aws:
     bucket: dunder-mifflin-bucket
     endpoint: http://localhost:4566
   sqs:
-    endpoint: http://localhost.localstack.cloud:4566
+    endpoint: https://localhost.localstack.cloud:4566
     queue: /000000000000/quotes

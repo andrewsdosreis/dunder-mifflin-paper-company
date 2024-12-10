@@ -10,6 +10,8 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.sqs.SqsClient;
 
+import java.net.URI;
+
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.SQS;
 
@@ -18,15 +20,17 @@ public class AwsConfiguration {
     private final AwsProperties awsProperties;
     private final AwsBasicCredentials credentials;
     private final TestContainersConfiguration testContainersConfiguration;
+    private final LocalStackContainer localStackContainer;
 
-    public AwsConfiguration(AwsProperties awsProperties, TestContainersConfiguration testContainersConfiguration) {
+    public AwsConfiguration(AwsProperties awsProperties, TestContainersConfiguration testContainersConfiguration, LocalStackContainer localStackContainer) {
         this.awsProperties = awsProperties;
         this.credentials = AwsBasicCredentials.create(awsProperties.getCredentials().getAccessKeyId(), awsProperties.getCredentials().getSecretAccessKey());
         this.testContainersConfiguration = testContainersConfiguration;
+        this.localStackContainer = localStackContainer;
     }
 
     @Bean
-    public S3Client s3Client(LocalStackContainer localStackContainer) {
+    public S3Client s3Client() {
         return S3Client.builder()
                 .endpointOverride(localStackContainer.getEndpointOverride(S3))
                 .region(Region.of(localStackContainer.getRegion()))
@@ -43,17 +47,19 @@ public class AwsConfiguration {
     }
 
     @Bean
-    public SqsClient sqsClient(LocalStackContainer localStackContainer) {
+    public SqsClient sqsClient() {
         return SqsClient.builder()
-                .endpointOverride(localStackContainer.getEndpointOverride(SQS))
-                .region(Region.of(localStackContainer.getRegion()))
-                .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                .endpointOverride(URI.create("https://localhost.localstack.cloud:4566"))
+                .region(Region.EU_WEST_1)
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create("test", "test")
+                ))
                 .build();
     }
 
     @Bean
-    public String sqsQueueUrl(LocalStackContainer localStackContainer) {
-        return "http://localhost.localstack.cloud:4566/000000000000/quotes" ;
+    public String sqsQueueUrl() {
+        return "https://localhost.localstack.cloud:4566/000000000000/quotes" ;
     }
 
     @Bean

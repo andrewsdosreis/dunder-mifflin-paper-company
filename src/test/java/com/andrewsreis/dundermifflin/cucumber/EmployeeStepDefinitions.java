@@ -5,6 +5,7 @@ import com.andrewsreis.dundermifflin.app.dataproviders.employee.EmployeeJpaRepos
 import com.andrewsreis.dundermifflin.app.dataproviders.photo.PhotoDataProvider;
 import com.andrewsreis.dundermifflin.app.entrypoints.employees.models.EmployeeResponse;
 import com.andrewsreis.dundermifflin.core.domain.Photo;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -20,7 +21,6 @@ import java.io.InputStream;
 import java.util.Objects;
 
 public class EmployeeStepDefinitions {
-
     private final EmployeeJpaRepository employeeJpaRepository;
     private final TestRestTemplate restTemplate;
     private final PhotoDataProvider photoDataProvider;
@@ -38,6 +38,7 @@ public class EmployeeStepDefinitions {
     @Given("the system is initialized with no employees")
     public void systemInitializedWithNoEmployees() {
         employeeJpaRepository.deleteAll();
+
         Assertions.assertEquals(0, employeeJpaRepository.count());
     }
 
@@ -99,7 +100,13 @@ public class EmployeeStepDefinitions {
         Assertions.assertNotNull(photo.image(), "Photo image data should not be null");
     }
 
-    // ----- Helper methods -----
+    @And("the employee have the quote {string}")
+    public void theEmployeeHaveTheQuote(String quote) {
+        Assertions.assertNotNull(
+                latestResponseBody.quotes().stream().filter(q -> q.equals(quote)).findFirst().orElse(null)
+        );
+    }
+
     private byte[] loadTestPhoto(String photoFilename) throws IOException {
         try (InputStream in = getClass().getResourceAsStream("/static/" + photoFilename)) {
             if (in == null) {
@@ -111,8 +118,12 @@ public class EmployeeStepDefinitions {
 
     private String loadTestTrivia(String firstName) {
         return switch (firstName) {
-            case "Jim" -> "Jim has appeared in every single episode of The Office with the exception of \"Mafia,\" in which only his voice can be heard.";
-            case "Michael" -> "His role models are Bob Hope, Abraham Lincoln, Bono, and God. Michael lost his virginity when he was 28. His signature saying is \"That's what she said\". Michael is almost incapable of keeping a secret. His deepest fear is being alone.";
+            case "Jim" ->
+                    "Jim has appeared in every single episode of The Office with the exception of \"Mafia,\" in which only his voice can be heard.";
+            case "Dwight" ->
+                    "In the episode \"Valentine's Day\", Dwight is given a bobblehead doll as a Valentine's gift, from Angela. Following the episode, fans of the show petitioned NBC to make the bobblehead doll available for purchase on their online store. NBC responded by creating an initial run of 4,000 bobblehead dolls, which sold out almost immediately.";
+            case "Michael" ->
+                    "His role models are Bob Hope, Abraham Lincoln, Bono, and God. Michael lost his virginity when he was 28. His signature saying is \"That's what she said\". Michael is almost incapable of keeping a secret. His deepest fear is being alone.";
             default -> null;
         };
     }

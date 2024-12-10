@@ -99,6 +99,7 @@ public class TestContainersConfiguration {
 
         s3Client.createBucket(b -> b.bucket("dunder-mifflin-bucket"));
         LOGGER.info("S3 bucket 'dunder-mifflin-bucket' created.");
+        LOGGER.info("S3 endpoint: {}", localStackContainer.getEndpointOverride(S3));
 
         // Initialize SQS Queue
         SqsClient sqsClient = SqsClient.builder()
@@ -109,6 +110,7 @@ public class TestContainersConfiguration {
 
         sqsClient.createQueue(q -> q.queueName("quotes"));
         LOGGER.info("SQS queue 'quotes' created.");
+        LOGGER.info("SQS endpoint: {}", localStackContainer.getEndpointOverride(SQS));
 
         // Initialize API Gateway and Lambda Function for Trivia external API
         try {
