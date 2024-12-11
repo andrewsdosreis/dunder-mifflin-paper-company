@@ -62,7 +62,9 @@ This application must:
 
 ## References
 https://docs.localstack.cloud/overview/
+
 https://docs.localstack.cloud/user-guide/integrations/testcontainers/
+
 https://www.localstack.cloud/pricing
 
 ## Contact and Contribution
