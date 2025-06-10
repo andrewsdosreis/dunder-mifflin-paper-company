@@ -8,7 +8,7 @@ This application must:
 - Receive a streaming of employee's quotes and store them
 - Search a Trivia about the employees in an external service
 
-### (Theorical) Pro environment
+### (Theoretical) Pro environment
 
 ![localstack-pro_environment.png](doc/localstack-pro_environment.png)
 
